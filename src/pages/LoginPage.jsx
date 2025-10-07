@@ -1,6 +1,6 @@
 import React, { useState, useContext } from 'react';
 import axios from 'axios';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { AuthContext } from '../context/AuthContext';
 
 const LoginPage = () => {
@@ -27,13 +27,14 @@ const LoginPage = () => {
 
     return (
         <div className="form-container">
-            <h2>Client Login</h2>
+            <h2>Login</h2>
             <form onSubmit={handleSubmit}>
                 <input type="email" name="email" placeholder="Email" value={formData.email} onChange={handleChange} required />
                 <input type="password" name="password" placeholder="Password" value={formData.password} onChange={handleChange} required />
                 <button type="submit">Login</button>
             </form>
             {errorMsg && <p className="error-message">{errorMsg}</p>}
+            <Link to="/data" className="signup-button">Signup</Link>
         </div>
     );
 };

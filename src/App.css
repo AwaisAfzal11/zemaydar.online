@@ -254,3 +254,23 @@ body {
   text-align: center;
   font-weight: 500;
 }
+
+/* Add this to the end of your file */
+.form-container .signup-button {
+  display: block; /* Makes the link take up the full width */
+  width: 100%;
+  box-sizing: border-box; /* To include padding in the width */
+  text-align: center;
+  margin-top: 1rem;
+  padding: 0.8rem;
+  background: #6c757d; /* A secondary, less prominent color */
+  color: white;
+  text-decoration: none;
+  border-radius: 5px;
+  font-size: 1.1rem;
+  transition: background-color 0.2s;
+}
+
+.form-container .signup-button:hover {
+    background-color: #5a6268;
+}

@@ -15,7 +15,7 @@ function App() {
       <main className="container">
         <Routes>
           {/* Public Routes */}
-          <Route path="/" element={<DataFormPage />} />
+          <Route path="/" element={<LoginPage />} />
           <Route path="/data" element={<DataFormPage />} />
           <Route path="/login" element={<LoginPage />} />
 
