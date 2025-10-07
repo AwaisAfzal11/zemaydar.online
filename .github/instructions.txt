@@ -1,0 +1,3 @@
+Create FTP account. Hostinger-Files-CreateFTP
+Add .github folder 
+Create build and push

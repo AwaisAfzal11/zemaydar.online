@@ -1,0 +1,52 @@
+# .github/workflows/deploy.yml
+
+name: Deploy Frontend to cPanel via FTP
+
+# This action runs on every push to the 'main' branch
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest # Use a standard Linux runner
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3 # Gets your code from the repo
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3 # Sets up the Node.js environment
+        with:
+          node-version: '18' # Use a recent LTS version of Node.js
+
+      - name: Install Dependencies
+        run: npm install # Runs 'npm install' to get packages
+
+      - name: Build React App
+        # Set the VITE_API_URL environment variable for the build
+        run: VITE_API_URL=https://api.zemaydar.online/api npm run build
+
+      - name: FTP Deploy
+        uses: SamKirkland/FTP-Deploy-Action@4.3.3
+        with:
+          # Your cPanel server's address (e.g., ftp.zemaydar.online or just the IP)
+          server: ${{ secrets.FTP_SERVER }}
+          
+          # Your FTP username from cPanel
+          username: ${{ secrets.FTP_USERNAME }}
+          
+          # Your FTP password from cPanel
+          password: ${{ secrets.FTP_PASSWORD }}
+          
+          # The source folder on the runner to upload from (the result of 'npm run build')
+          local-dir: ./dist/ 
+          
+          # The destination folder on your server (main domain's root)
+          # IMPORTANT: Use /public_html for your main domain!
+          server-dir: /public_html/
+          
+          # Options to make it faster and cleaner
+          # This will delete files on the server that are not in your new build
+          dangerous-clean-slate: true
