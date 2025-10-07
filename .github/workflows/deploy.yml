@@ -2,7 +2,6 @@
 
 name: Deploy Frontend to cPanel via FTP
 
-# This action runs on every push to the 'main' branch
 on:
   push:
     branches:
@@ -10,43 +9,40 @@ on:
 
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest # Use a standard Linux runner
+    runs-on: ubuntu-latest
 
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3 # Gets your code from the repo
+        uses: actions/checkout@v3
 
       - name: Set up Node.js
-        uses: actions/setup-node@v3 # Sets up the Node.js environment
+        uses: actions/setup-node@v3
         with:
-          node-version: '18' # Use a recent LTS version of Node.js
+          # CHANGED: Updated Node.js to a version compatible with Vite
+          node-version: '20'
 
       - name: Install Dependencies
-        run: npm install # Runs 'npm install' to get packages
+        # ADDED: Specify the subfolder where your project lives
+        working-directory: ./client # Assuming your frontend code is in a 'client' folder at the root. If not, change 'client' to the correct folder name.
+        run: npm install
 
       - name: Build React App
-        # Set the VITE_API_URL environment variable for the build
+        # ADDED: Specify the working directory here as well
+        working-directory: ./client
         run: VITE_API_URL=https://api.zemaydar.online/api npm run build
-
+        
       - name: FTP Deploy
         uses: SamKirkland/FTP-Deploy-Action@4.3.3
         with:
-          # Your cPanel server's address (e.g., ftp.zemaydar.online or just the IP)
           server: ${{ secrets.FTP_SERVER }}
-          
-          # Your FTP username from cPanel
           username: ${{ secrets.FTP_USERNAME }}
-          
-          # Your FTP password from cPanel
           password: ${{ secrets.FTP_PASSWORD }}
           
-          # The source folder on the runner to upload from (the result of 'npm run build')
-          local-dir: ./dist/ 
+          # CHANGED: Point to the 'dist' folder inside your project's subfolder
+          local-dir: ./client/dist/ 
           
-          # The destination folder on your server (main domain's root)
-          # IMPORTANT: Use /public_html for your main domain!
+          # CORRECT: This points to the correct destination for your main domain
           server-dir: /public_html/
           
-          # Options to make it faster and cleaner
-          # This will delete files on the server that are not in your new build
+          # This option ensures a clean deployment every time
           dangerous-clean-slate: true
