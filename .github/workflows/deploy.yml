@@ -18,17 +18,15 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
-          # CHANGED: Updated Node.js to a version compatible with Vite
+          # This is correct - keeps the Node.js version compatible with Vite
           node-version: '20'
 
       - name: Install Dependencies
-        # ADDED: Specify the subfolder where your project lives
-        working-directory: ./client # Assuming your frontend code is in a 'client' folder at the root. If not, change 'client' to the correct folder name.
+        # REMOVED: 'working-directory' is not needed because package.json is at the root
         run: npm install
 
       - name: Build React App
-        # ADDED: Specify the working directory here as well
-        working-directory: ./client
+        # REMOVED: 'working-directory' is not needed here either
         run: VITE_API_URL=https://api.zemaydar.online/api npm run build
         
       - name: FTP Deploy
@@ -38,10 +36,10 @@ jobs:
           username: ${{ secrets.FTP_USERNAME }}
           password: ${{ secrets.FTP_PASSWORD }}
           
-          # CHANGED: Point to the 'dist' folder inside your project's subfolder
-          local-dir: ./client/dist/ 
+          # CHANGED: The 'dist' folder is now at the root of the checkout
+          local-dir: ./dist/ 
           
-          # CORRECT: This points to the correct destination for your main domain
+          # This remains correct - your main domain's web root
           server-dir: /public_html/
           
           # This option ensures a clean deployment every time
